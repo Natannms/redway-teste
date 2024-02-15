@@ -1,5 +1,7 @@
 import { Formik, Field, Form, FormikHelpers } from 'formik';
 import { ZodError, z } from 'zod';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface Values {
   email: string;
@@ -21,6 +23,7 @@ function App() {
   // }, [])
   return (
     <div className='bg-gray-800 w-screen h-screen py-20'>
+      <ToastContainer />
       <Formik
         initialValues={{
           email: '',
@@ -30,15 +33,14 @@ function App() {
           { setSubmitting }: FormikHelpers<Values>
         ) => {
           setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
-
             try {
               const zodValidation = validationSchema.parse(values);
               console.log(zodValidation);
+              toast("Email Enviado com sucesso!");
             } catch (error) {
               if (error instanceof ZodError) {
                 const errorMessage = error.errors[0]?.message;
-                console.log(errorMessage);
+                toast(errorMessage);
               }
             }
             setSubmitting(false);

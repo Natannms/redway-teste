@@ -44,7 +44,7 @@ app.get("/emails", async (req, res) => {
   try {
     const connection = await mysql.createConnection(dbConfig);
 
-    const [results, fields] = await connection.execute('SELECT * FROM emails');
+    const [results, fields] = await connection.execute('SELECT * FROM emails ORDER BY id DESC');
     connection.end();
 
     res.send({ emails: results });
@@ -81,6 +81,7 @@ async function createDatabaseAndTableIfNotExists() {
     console.error('Erro ao criar o banco de dados ou tabela:', error);
   }
 }
+
 
 app.listen(PORT, async () => {
   await createDatabaseAndTableIfNotExists();

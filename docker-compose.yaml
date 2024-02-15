@@ -1,0 +1,33 @@
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql-8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: teste
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql:/var/lib/mysql
+  # api:
+  #   container_name: api
+  #   build: ./backend
+  #   restart: always
+  #   ports:
+  #     - 4000:4000
+  # spa:
+  #   container_name: spa
+  #   build: ./redApp
+  #   volumes: 
+  #     - spa:/var/www/html
+  # nginx:
+  #   container_name: nginx
+  #   build: ./.nginx
+  #   ports:
+  #     - 80:80
+  #   volumes: 
+  #     - spa:/var/www/html
+volumes:
+  # spa:
+  mysql:

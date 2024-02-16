@@ -26,6 +26,7 @@ function App() {
 
       const data = await response.text();
       toast(data)
+      await getEmails()
     } catch (error) {
       console.error('Erro na requisição:', error);
       toast("Não foi possivel salvar email. tente novamente");
@@ -54,6 +55,7 @@ function App() {
   useEffect(() => {
     getEmails()
   }, [])
+  
   return (
     <div className='bg-gray-800 w-full h-full py-4 px-4'>
       <ToastContainer />

@@ -5,29 +5,38 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: teste
+      MYSQL_DATABASE: redway
     ports:
       - "3306:3306"
     volumes:
-      - ./mysql:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
   api:
     container_name: api
     build: ./backend
     restart: always
     ports:
       - 4000:4000
-  spa:
-    container_name: spa
+    depends_on: 
+      - mysql
+  redapp:
+    container_name: redapp
     build: ./redApp
     volumes: 
-      - spa:/var/www/html
+      - redapp:/var/www/html
+    depends_on:
+      - mysql
+      - api
   nginx:
     container_name: nginx
     build: ./.nginx
     ports:
       - 80:80
     volumes: 
-      - spa:/var/www/html
+      - redapp:/var/www/html
+    depends_on:
+      - mysql
+      - api
+      - redapp
 volumes:
-  spa:
+  redapp:
   mysql:

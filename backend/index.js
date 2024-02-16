@@ -10,6 +10,7 @@ const dbConfig = {
   user: process.env.USER,
   password:process.env.PASSWORD,
   database: process.env.DATABASE,
+  port: 3306
 };
 
 app.use(cors());
@@ -39,11 +40,10 @@ app.post("/register", async (req, res) => {
   }
 });
 
-
 app.get("/emails", async (req, res) => {
   try {
     const connection = await mysql.createConnection(dbConfig);
-
+    
     const [results, fields] = await connection.execute('SELECT * FROM emails ORDER BY id DESC');
     connection.end();
 
@@ -55,35 +55,6 @@ app.get("/emails", async (req, res) => {
   }
 });
 
-async function createDatabaseAndTableIfNotExists() {
-  try {
-    const connectionWithoutDB = await mysql.createConnection({
-      host: dbConfig.host,
-      user: dbConfig.user,
-      password: dbConfig.password,
-    });
-
-    await connectionWithoutDB.query('CREATE DATABASE IF NOT EXISTS redway');
-
-    connectionWithoutDB.end();
-
-    const connection = await mysql.createConnection(dbConfig);
-
-    await connection.query(`
-      CREATE TABLE IF NOT EXISTS emails (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        email VARCHAR(255) NOT NULL
-      )
-    `);
-
-    connection.end();
-  } catch (error) {
-    console.error('Erro ao criar o banco de dados ou tabela:', error);
-  }
-}
-
-
 app.listen(PORT, async () => {
-  await createDatabaseAndTableIfNotExists();
   console.log(`Servidor rodando na porta http://localhost:${PORT}`);
 });
